@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 body {
-    background: url("./static/stars.jpg");
+    background: url("/stars.jpg");
     background-repeat: repeat;
 }
