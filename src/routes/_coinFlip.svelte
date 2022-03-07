@@ -49,8 +49,8 @@
             let playerWallet = g.value.player;
             let gameInfo = [];
         }
-        flipWinPerc = parseFloat(flipWins / flipCount).toFixed(2) + "%";
-        flipLosePerc = parseFloat(flipLosses / flipCount).toFixed(2) + "%";
+        flipWinPerc = parseFloat((flipWins / flipCount) * 100).toFixed(2) + "%";
+        flipLosePerc = parseFloat((flipLosses / flipCount) * 100).toFixed(2) + "%";
     }
     // let SingleStats = getSingleStats();
 
