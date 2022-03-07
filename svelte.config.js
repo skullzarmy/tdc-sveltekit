@@ -6,6 +6,5 @@ export default {
         methodOverride: {
             allowed: ["PATCH", "DELETE"],
         },
-        target: "#svelte",
     },
 };
