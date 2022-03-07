@@ -1,19 +1,11 @@
-import adapter from '@sveltejs/adapter-netlify';
+import adapter from "@sveltejs/adapter-netlify";
 
 export default {
-  kit: {
-    adapter: adapter(),
-    target: '#svelte'
-  }
-};
-
-const config = {
-  kit: {
-    adapter: adapter(),
-    methodOverride: {
-      allowed: ['PATCH', 'DELETE'],
+    kit: {
+        adapter: adapter(),
+        methodOverride: {
+            allowed: ["PATCH", "DELETE"],
+        },
+        target: "#svelte",
     },
-  },
 };
-
-export default config;
