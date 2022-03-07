@@ -65,26 +65,30 @@
         >
         <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center" />
         {#if !flipBalance}
-            <button href="/" class="btn btn-outline loading">
+            <a
+                href="https://better-call.dev/mainnet/{flipWallet}/storage"
+                target="_blank"
+                class="btn btn-outline loading"
+            >
                 Flip Contract<span class="pl-1">loading</span>
-            </button>
+            </a>
         {:else}
-            <button
+            <a
                 href="https://better-call.dev/mainnet/{flipWallet}/storage"
                 target="_blank"
                 class="btn btn-primary md:self-end"
             >
-                Flip Contract<span class="pl-1">{flipBalance}</span>ꜩ
-            </button>
+                Flip Contract<span class="pl-1">{flipBalance}</span>xtz
+            </a>
         {/if}
     </div>
 
     <div class="container px-5 pb-24 pt-0 mx-auto">
         <div class="flex flex-wrap -m-4 text-center stats">
-            <SingleStat value={flipCount} title="Games Played" />
+            <SingleStat value={flipCount} title="Games Played" isTez="false" />
             <SingleStat value={flipTez} title="Wagered" isTez="true" />
-            <SingleStat value={flipWins} title="Doubles ({flipWinPerc})" />
-            <SingleStat value={flipLosses} title="Rugs ({flipLosePerc})" />
+            <SingleStat value={flipWins} title="Doubles ({flipWinPerc})" isTez="false" />
+            <SingleStat value={flipLosses} title="Rugs ({flipLosePerc})" isTez="false" />
         </div>
     </div>
 </section>

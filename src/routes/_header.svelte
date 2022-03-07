@@ -36,13 +36,13 @@
                 Pool Wallet<span class="pl-1">loading</span>
             </button>
         {:else}
-            <button
+            <a
                 href="https://better-call.dev/mainnet/{poolWallet}/interact?entrypoint=withdraw"
                 target="_blank"
                 class="btn btn-accent"
             >
-                Pool Wallet<span class="pl-1">{poolBalance}</span>ꜩ
-            </button>
+                Pool Wallet<span class="pl-1">{poolBalance}</span>xtz
+            </a>
         {/if}
     </div>
 </header>
