@@ -28,6 +28,7 @@
     });
 
     async function getTxnsToPool() {
+        battlePoolTxnCount = 0;
         let txns = await fetch(
             "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" +
                 battleWallet +
