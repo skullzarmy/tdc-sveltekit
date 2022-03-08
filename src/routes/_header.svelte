@@ -16,7 +16,7 @@
 </script>
 
 <header class="text-gray-400 bg-transparent body-font shadow w-full">
-    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center space-y-5">
         <a
             href="/"
             class="flex order-first lg:order-none title-font font-medium items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0"
@@ -39,7 +39,7 @@
             <a
                 href="https://better-call.dev/mainnet/{poolWallet}/interact?entrypoint=withdraw"
                 target="_blank"
-                class="btn btn-accent"
+                class="btn btn-secondary"
             >
                 Pool Wallet<span class="pl-1">{poolBalance}</span>xtz
             </a>
