@@ -64,9 +64,9 @@
                             </td>
                             <td>
                                 {#if row.amount > 4000000}
-                                    <span class="text-amber-500">{Math.floor(row.amount / 1000000)}</span>
+                                    <span class="text-amber-500">{Math.floor(row.amount / 1000000)}xtz</span>
                                 {:else}
-                                    {Math.floor(row.amount / 1000000)}
+                                    {Math.floor(row.amount / 1000000)}xtz
                                 {/if}
                             </td>
                             <td>
