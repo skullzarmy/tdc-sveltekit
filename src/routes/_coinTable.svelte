@@ -45,15 +45,16 @@
                             class:border-l-red-500={row.status == "1"}
                             class:border-l-yellow-500={row.status == "0"}
                         >
-                            <td
-                                ><img
+                            <td class:text-green-500={row.status == "2"} class:text-red-500={row.status == "1"}>
+                                <img
                                     src="https://services.tzkt.io/v1/avatars/{row.player}"
                                     width="35"
                                     height="35"
                                     class="inline-flex"
+                                    alt="wallet avatar"
                                 />
-                                {row.player}</td
-                            >
+                                {row.player}
+                            </td>
                             <td>
                                 {#if row.heads == true}
                                     Heads

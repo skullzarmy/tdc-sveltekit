@@ -45,26 +45,24 @@
                             class:border-l-red-500={row.status == "3"}
                             class:border-l-yellow-500={row.status == "0"}
                         >
-                            <td
-                                class:text-green-500={row.status == "1"}
-                                class:underline={row.status == "1" || row.status == "3"}
-                                class:text-red-500={row.status == "3"}
-                            >
+                            <td class:text-green-500={row.status == "1"} class:text-red-500={row.status == "3"}>
                                 <img
                                     src="https://services.tzkt.io/v1/avatars/{row.p1}"
                                     width="35"
                                     height="35"
                                     class="inline-flex"
+                                    alt="wallet avatar"
                                 />
                                 {row.p1}
                             </td>
-                            <td class:text-green-500={row.status == "2"} class:underline={row.status == "2"}>
+                            <td class:text-green-500={row.status == "2"}>
                                 {#if row.p2}
                                     <img
                                         src="https://services.tzkt.io/v1/avatars/{row.p2}"
                                         width="35"
                                         height="35"
                                         class="inline-flex"
+                                        alt="wallet avatar"
                                     />
                                     {row.p2}
                                 {:else}
@@ -84,7 +82,7 @@
                                 {:else if row.status == "1"}
                                     <span class="text-green-500">Player 1 Wins</span>
                                 {:else if row.status == "3"}
-                                    <span class="text-red-500 underline">Cancelled</span>
+                                    <span class="text-red-500">Cancelled</span>
                                 {:else}
                                     <span class="text-yellow-500">Waiting</span>
                                 {/if}
