@@ -31,6 +31,7 @@
             }
         ).catch((e) => console.log(e));
         let txnData = await txns.json();
+        flipPoolTxnCount = 0;
         for (let txn of txnData) {
             flipPoolTxnCount += txn.amount / 1000000;
         }
