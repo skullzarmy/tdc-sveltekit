@@ -18,6 +18,7 @@
         updateCoinFlip();
         setInterval(() => {
             updateCoinFlip();
+            getTxnsToPool();
         }, 30000);
         getTxnsToPool();
     });

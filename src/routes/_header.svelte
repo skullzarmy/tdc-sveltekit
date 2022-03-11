@@ -28,7 +28,7 @@
             <a
                 href="https://twitter.com/TDC_Notifier"
                 class="text-lg text-white uppercase underline hover:underline hover:text-blue-500 bold flex"
-                >Follow TDC Twitter Bot</a
+                ><img src="/twitter.png" alt="Twitter logo" /> Follow TDC Twitter Bot</a
             >
         </nav>
         {#if !poolBalance}
