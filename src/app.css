@@ -6,3 +6,30 @@ body {
     background: url("/stars.jpg");
     background-repeat: repeat;
 }
+@layer components {
+    /* .svelte-simple-datatable,
+    .css.datatable,
+    .dt-table,
+    .dt-search,
+    .dt-header {
+        @apply bg-zinc-900 text-white;
+    }
+    .filter input {
+        @apply bg-zinc-900 text-white border-b-2 border-b-white;
+    }
+    .dt-table td {
+        @apply border-l-2 border-l-white;
+    } */
+    .dt-search {
+        @apply pt-4 mb-4 w-full;
+    }
+    .dt-table td {
+        @apply text-center;
+    }
+    .datatable {
+        @apply rounded-lg;
+    }
+    .dt-pagination {
+        @apply py-4 rounded-b-lg;
+    }
+}

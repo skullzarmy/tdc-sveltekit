@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import BattleTable from "./_battleTable.svelte";
     var battleCount = null;
     var battleTez = null;
     var battlePlayed = null;
@@ -15,6 +16,21 @@
     var battlePoolTxnCount = 0;
     var uniqueWalletCount = null;
     var playerWallets = Array();
+    export var battleGames;
+    const settings = {
+        blocks: {
+            searchInput: true,
+            paginationButtons: true,
+            paginationRowCount: true,
+        },
+        sortable: true,
+        pagination: true,
+        rowsPerPage: 50,
+        columnFilter: true,
+        css: true,
+    };
+    let rows;
+    var data;
     const battleWallet = "KT1J8uugdkykcDx46ycEBxv3shNioDMvv1ad";
     const poolWallet = "KT1K6TyRSsAxukmjDWik1EoExSKsTg9wGEEX";
 
@@ -65,7 +81,7 @@
                 headers: { Accept: "application/json" },
             }
         ).catch((e) => console.log(e));
-        let battleGames = await battleGameStore.json();
+        battleGames = await battleGameStore.json();
         battlePlayed = null;
         battleCancelled = null;
         wagers = Array();
@@ -124,7 +140,7 @@
         {/if}
     </div>
 
-    <div class="container px-5 pb-24 pt-0 mx-auto">
+    <div class="container px-5 pb-4 pt-0 mx-auto">
         <div class="flex flex-wrap -m-4 text-center stats">
             <SingleStat value={battleCount} title="Games Started" isTez="false" />
             <SingleStat value={battleTez} title="Wagered" isTez="true" />
@@ -136,4 +152,17 @@
             <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
         </div>
     </div>
+    {#if battleGames}
+        <div class="container px-5 pb-24 pt-0 mx-auto mt-0 rounded-lg">
+            <div tabindex="0" class="collapse collapse-arrow">
+                <input type="checkbox" />
+                <div class="collapse-title text-xl font-medium text-center bg-zinc-900 rounded-lg mx-0 underline">
+                    VIEW BATTLES
+                </div>
+                <div class="collapse-content h-[40rem] ">
+                    <BattleTable {battleGames} />
+                </div>
+            </div>
+        </div>
+    {/if}
 </section>
