@@ -16,21 +16,20 @@
 </script>
 
 <header class="text-gray-400 bg-transparent body-font shadow w-full">
-    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center space-y-5">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col lg:flex-row items-center justify-items-center space-y-5">
         <a
             href="/"
-            class="flex order-first lg:order-none title-font font-medium items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0"
+            class="flex order-first lg:order-none title-font font-medium items-center text-white lg:items-center justify-center mb-4 md:mb-0"
         >
             <img src="/coinlogo.png" alt="TDC Logo" />
             <span class="ml-5 text-xl xl:block">TezosDegenClub (unofficial) Dashboard</span>
         </a>
-        <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <a
-                href="https://twitter.com/TDC_Notifier"
-                class="text-lg text-white uppercase underline hover:underline hover:text-blue-500 bold flex"
-                ><img src="/twitter.png" alt="Twitter logo" /> Follow TDC Twitter Bot</a
-            >
-        </nav>
+        <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center" />
+        <a
+            href="https://twitter.com/TDC_Notifier"
+            class="btn btn-outline mx-4 text-white hover:bg-zinc-300 hover:text-zinc-900 flex"
+            ><img src="/twitter.png" alt="Twitter logo" /> Follow TDC Twitter Bot</a
+        >
         {#if !poolBalance}
             <button href="/" class="btn btn-outline loading">
                 Pool Wallet<span class="pl-1">loading</span>

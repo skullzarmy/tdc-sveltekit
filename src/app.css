@@ -32,4 +32,10 @@ body {
     .dt-pagination {
         @apply py-4 rounded-b-lg;
     }
+    .stat {
+        @apply bg-zinc-800;
+    }
+    .collapse-content {
+        @apply bg-zinc-900 rounded-lg;
+    }
 }

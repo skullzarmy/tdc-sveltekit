@@ -153,7 +153,7 @@
         <div class="container px-5 pb-24 pt-0 mx-auto mt-0 rounded-lg">
             <div tabindex="0" class="collapse collapse-arrow">
                 <input type="checkbox" />
-                <div class="collapse-title text-xl font-medium text-center bg-zinc-900 rounded-lg mx-0 underline">
+                <div class="collapse-title text-xl font-medium text-center bg-zinc-900 rounded-lg mx-0 px-0 underline">
                     VIEW FLIP GAMES
                 </div>
                 <div class="collapse-content h-[40rem] ">
