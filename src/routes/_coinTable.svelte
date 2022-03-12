@@ -1,7 +1,7 @@
 <script>
     import { Datatable, SearchInput, PaginationButtons, PaginationRowCount } from "svelte-simple-datatables";
     export let flipGames;
-    export let dataRefresh = true;
+    export let dataRefreshCoin = true;
     let data;
     let rows;
     const settings = {
@@ -16,10 +16,11 @@
         columnFilter: true,
         css: true,
     };
-    if (dataRefresh) {
+    if (dataRefreshCoin) {
         data = Array();
-        for (let game of flipGames.reverse()) {
+        for (let game of flipGames) {
             data.push(game.value);
+            data[data.length - 1].amount = data[data.length - 1].amount / 1000000;
         }
     }
 </script>
@@ -27,8 +28,8 @@
 {#if data}
     <Datatable {settings} bind:data bind:dataRows={rows} id={"flipTable"}>
         <table class="w-full bg-zinc-900">
-            <input type="checkbox" name="dataRefresh" id="dataRefresh" bind:checked={dataRefresh} />
-            <label for="dataRefresh">&nbsp;&mdash; Data Refresh (resets sort)</label>
+            <input type="checkbox" name="dataRefreshCoin" id="dataRefreshCoin" bind:checked={dataRefreshCoin} />
+            <label for="dataRefreshCoin">&nbsp;&mdash; Data Refresh (resets sort)</label>
             <thead>
                 <th data-key="player">Player</th>
                 <th data-key="heads">Heads / Tails</th>
@@ -63,10 +64,10 @@
                                 {/if}
                             </td>
                             <td>
-                                {#if row.amount > 4000000}
-                                    <span class="text-amber-500">{Math.floor(row.amount / 1000000)}xtz</span>
+                                {#if row.amount > 4}
+                                    <span class="text-amber-500">{Math.floor(row.amount)}xtz</span>
                                 {:else}
-                                    {Math.floor(row.amount / 1000000)}xtz
+                                    {Math.floor(row.amount)}xtz
                                 {/if}
                             </td>
                             <td>

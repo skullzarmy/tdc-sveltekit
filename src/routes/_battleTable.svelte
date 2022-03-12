@@ -1,7 +1,7 @@
 <script>
     import { Datatable, SearchInput, PaginationButtons, PaginationRowCount } from "svelte-simple-datatables";
     export let battleGames;
-    export let dataRefresh = true;
+    export let dataRefreshBattle = true;
     let data;
     let rows;
     const settings = {
@@ -16,10 +16,11 @@
         columnFilter: true,
         css: true,
     };
-    if (dataRefresh) {
+    if (dataRefreshBattle) {
         data = Array();
         for (let game of battleGames.reverse()) {
             data.push(game.value);
+            data[data.length - 1].amount = data[data.length - 1].amount / 1000000;
         }
     }
 </script>
@@ -27,14 +28,14 @@
 {#if data}
     <Datatable {settings} bind:data bind:dataRows={rows} id={"battleTable"}>
         <table class="w-full bg-zinc-900">
-            <input type="checkbox" name="dataRefresh" id="dataRefresh" bind:checked={dataRefresh} />
-            <label for="dataRefresh">&nbsp;&mdash; Data Refresh (resets sort)</label>
+            <input type="checkbox" name="dataRefreshBattle" id="dataRefreshBattle" bind:checked={dataRefreshBattle} />
+            <label for="dataRefreshBattle">&nbsp;&mdash; Data Refresh (resets sort)</label>
             <thead>
                 <th data-key="player">Player 1</th>
                 <th data-key="heads">Player 2</th>
                 <th data-key="amount">Bet</th>
                 <th data-key="status">Status</th>
-                <th data-key="ts">Time</th>
+                <th data-key="ts">Matched</th>
             </thead>
             <tbody>
                 {#if rows}
@@ -74,10 +75,10 @@
                                 {/if}
                             </td>
                             <td>
-                                {#if row.amount > 10000000}
-                                    <span class="text-amber-500">{Math.floor(row.amount / 1000000)}xtz</span>
+                                {#if row.amount > 10}
+                                    <span class="text-amber-500">{Math.floor(row.amount)}xtz</span>
                                 {:else}
-                                    {Math.floor(row.amount / 1000000)}xtz
+                                    {Math.floor(row.amount)}xtz
                                 {/if}
                             </td>
                             <td>
