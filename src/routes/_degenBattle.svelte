@@ -47,7 +47,7 @@
         setInterval(() => {
             updateBattleStats();
             getTxnsToPool();
-        }, 30000);
+        }, 150000);
     });
 
     async function getTxnsToPool() {
