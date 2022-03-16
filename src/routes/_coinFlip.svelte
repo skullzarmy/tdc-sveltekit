@@ -211,10 +211,10 @@
         <div class="flex flex-wrap -m-4 text-center stats">
             <SingleStat value={flipCount} title="Games Played" isTez="false" />
             <SingleStat value={flipTez} title="Wagered" isTez="true" />
-            <SingleStat value={flipToPool} title="Sent to Pool" isTez="true" />
-            <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
             <SingleStat value={flipWins} title="Doubles ({flipWinPerc})" isTez="false" />
             <SingleStat value={flipLosses} title="Rugs ({flipLosePerc})" isTez="false" />
+            <SingleStat value={flipToPool} title="Sent to Pool" isTez="true" />
+            <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
             <div tabindex="0" class="collapse collapse-arrow w-full border-transparent">
                 <input type="checkbox" />
                 <div class="collapse-title text-xl font-medium text-center mx-auto px-0">Player Stats</div>

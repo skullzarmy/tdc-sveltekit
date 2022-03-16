@@ -141,9 +141,9 @@
 
     <div class="container px-5 pb-24 pt-0 mx-auto">
         <div class="flex flex-wrap -m-4 text-center stats">
-            <SingleStat value={battleCount} title="Started" isTez="false" />
-            <SingleStat value={battleTez} title="Wagered" isTez="true" />
             <SingleStat value={battlePlayed} title="Played ({battlePlayedPerc})" isTez="false" />
+            <SingleStat value={battleTez} title="Wagered" isTez="true" />
+            <SingleStat value={battleCount} title="Started" isTez="false" />
             <SingleStat value={battleCancelled} title="Cancelled ({battleCancelPerc})" isTez="false" />
             <SingleStat value={wagersAvg} title="Average Bet" isTez="true" />
             <SingleStat value={wagerLargest} title="Largest Bet" isTez="true" />
