@@ -120,7 +120,7 @@
 <section class="text-gray-400 body-font">
     <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <span
-            class="flex order-first lg:order-none title-font font-medium text-2xl underline items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0"
+            class="flex order-first lg:order-none title-font font-medium text-2xl items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0"
             >Degen Battle Stats</span
         >
         <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center" />
