@@ -33,8 +33,12 @@
     };
     let rows;
     var data;
-    const battleWallet = "KT1Sv23ZC6xDC4FtdRv2qwqcYSt2m4rsNG83";
-    const allWallets = ["KT1Sv23ZC6xDC4FtdRv2qwqcYSt2m4rsNG83", "KT1J8uugdkykcDx46ycEBxv3shNioDMvv1ad"];
+    const battleWallet = "KT1DcrUC4rhnDkmvKDTykD3se7ZSwvqE1Rpr";
+    const allWallets = [
+        "KT1Sv23ZC6xDC4FtdRv2qwqcYSt2m4rsNG83",
+        "KT1J8uugdkykcDx46ycEBxv3shNioDMvv1ad",
+        "KT1DcrUC4rhnDkmvKDTykD3se7ZSwvqE1Rpr",
+    ];
     const poolWallet = "KT1K6TyRSsAxukmjDWik1EoExSKsTg9wGEEX";
 
     onMount(async () => {
