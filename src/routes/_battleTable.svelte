@@ -17,11 +17,14 @@
         css: true,
     };
     if (dataRefreshBattle) {
+        console.log("updating battle games");
         data = Array();
         for (let game of battleGames.reverse()) {
             data.push(game.value);
             data[data.length - 1].amount = data[data.length - 1].amount / 1000000;
         }
+    } else {
+        console.log(dataRefreshBattle);
     }
 </script>
 

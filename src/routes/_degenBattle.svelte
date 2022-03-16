@@ -17,6 +17,7 @@
     var uniqueWalletCount = null;
     var playerWallets = Array();
     export var battleGames;
+    let dataRefreshBattle;
     const settings = {
         blocks: {
             searchInput: true,
@@ -108,10 +109,8 @@
             battlePlayedPerc = parseFloat((battlePlayed / battleCount) * 100).toFixed(2) + "%";
             battleCancelPerc = parseFloat((battleCancelled / battleCount) * 100).toFixed(2) + "%";
         }
-        console.log(wagers);
         wagersAvg = parseFloat(wagers.reduce((a, b) => a + b, 0) / wagers.length / 1000000).toFixed(2);
         wagerLargest = wagerLargest / 1000000;
-        console.log(wagerLargest);
         uniqueWalletCount = playerWallets.length;
     }
 
@@ -140,29 +139,25 @@
         {/if}
     </div>
 
-    <div class="container px-5 pb-4 pt-0 mx-auto">
+    <div class="container px-5 pb-24 pt-0 mx-auto">
         <div class="flex flex-wrap -m-4 text-center stats">
-            <SingleStat value={battleCount} title="Games Started" isTez="false" />
+            <SingleStat value={battleCount} title="Started" isTez="false" />
             <SingleStat value={battleTez} title="Wagered" isTez="true" />
-            <SingleStat value={battlePlayed} title="Games Played ({battlePlayedPerc})" isTez="false" />
-            <SingleStat value={battleCancelled} title="Games Cancelled ({battleCancelPerc})" isTez="false" />
+            <SingleStat value={battlePlayed} title="Played ({battlePlayedPerc})" isTez="false" />
+            <SingleStat value={battleCancelled} title="Cancelled ({battleCancelPerc})" isTez="false" />
             <SingleStat value={wagersAvg} title="Average Bet" isTez="true" />
             <SingleStat value={wagerLargest} title="Largest Bet" isTez="true" />
             <SingleStat value={battleToPool} title="Sent to Pool" isTez="true" />
             <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
+            {#if battleGames}
+                <div tabindex="0" class="collapse collapse-arrow w-full border-zinc-900">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium text-center bg-zinc-900 mx-0 px-0">Battle Log</div>
+                    <div class="collapse-content h-[40rem] text-left">
+                        <BattleTable {battleGames} />
+                    </div>
+                </div>
+            {/if}
         </div>
     </div>
-    {#if battleGames}
-        <div class="container px-5 pb-24 pt-0 mx-auto mt-0 rounded-lg">
-            <div tabindex="0" class="collapse collapse-arrow">
-                <input type="checkbox" />
-                <div class="collapse-title text-xl font-medium text-center bg-zinc-900 rounded-lg mx-0 px-0 underline">
-                    VIEW BATTLES
-                </div>
-                <div class="collapse-content h-[40rem] ">
-                    <BattleTable {battleGames} />
-                </div>
-            </div>
-        </div>
-    {/if}
 </section>

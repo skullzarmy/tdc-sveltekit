@@ -7,15 +7,27 @@
     var flipLosses = null;
     var walletData = Array();
     var flipBalance = null;
-    var flipWinPerc;
-    var flipLosePerc;
     var flipToPool = null;
     var flipPoolTxnCount = 0;
     var uniqueWalletCount = null;
-    var playerWallets = Array();
-    var data;
-    let dataRefresh = true;
+    var playerWallets = {};
+    var data,
+        mostWins,
+        mostLosses,
+        mostPlays,
+        bestRatio,
+        bestRatioUser,
+        mostPlaysUser,
+        mostWinsUser,
+        mostLossesUser,
+        mostWon,
+        mostLost,
+        mostWonUser,
+        mostLostUser,
+        flipWinPerc,
+        flipLosePerc;
     export var flipGames;
+    let dataRefreshCoin;
     const settings = {
         blocks: {
             searchInput: true,
@@ -39,7 +51,19 @@
         }, 30000);
         getTxnsToPool();
     });
-
+    function formatAddress(address) {
+        // console.log(address);
+        if (!address || address == null) {
+            return;
+        }
+        return address.substring(0, 3) + ".." + address.substring(address.length - 4, address.length);
+    }
+    function formatWL(address) {
+        if (!address || address == null) {
+            return;
+        }
+        return playerWallets[address].wins + "W / " + playerWallets[address].losses + "L";
+    }
     async function getTxnsToPool() {
         let txns = await fetch(
             "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" + flipWallet + "&target=" + poolWallet,
@@ -82,41 +106,85 @@
             }
         ).catch((e) => console.log(e));
         flipGames = await flipGameStore.json();
-        if (dataRefresh) {
-            data = Array();
-            for (let game of flipGames.reverse()) {
-                data.push(game.value);
-            }
+        console.log("refreshing data");
+        data = Array();
+        for (let game of flipGames.reverse()) {
+            data.push(game.value);
         }
+
         // console.log(flipGames);
         // status 1 = rug & 2 = double
 
         flipWins = null;
         flipLosses = null;
+        playerWallets = {};
         for (let g of flipGames) {
+            if (!playerWallets[g.value.player]) {
+                playerWallets[g.value.player] = { wins: 0, losses: 0, plays: 0, ratio: 0, balance: 0 };
+            }
+            playerWallets[g.value.player].plays++;
+            if (!mostPlays || playerWallets[g.value.player].plays > mostPlays) {
+                mostPlays = playerWallets[g.value.player].plays;
+                mostPlaysUser = g.value.player;
+            }
             let status = g.value.status;
             if (status == "2") {
                 flipWins++;
+                playerWallets[g.value.player].wins++;
+                playerWallets[g.value.player].balance =
+                    playerWallets[g.value.player].balance + Math.floor(parseInt(g.value.amount) / 1000000);
+                if (!mostWins || playerWallets[g.value.player].wins > mostWins) {
+                    mostWins = playerWallets[g.value.player].wins;
+                    mostWinsUser = g.value.player;
+                }
+                if (!mostWon || playerWallets[g.value.player].balance > mostWon) {
+                    mostWon = playerWallets[g.value.player].balance;
+                    mostWonUser = g.value.player;
+                }
             } else {
                 flipLosses++;
-            }
-            if (!playerWallets.includes(g.value.player)) {
-                playerWallets.push(g.value.player);
+                playerWallets[g.value.player].losses++;
+                playerWallets[g.value.player].balance =
+                    playerWallets[g.value.player].balance - Math.floor(parseInt(g.value.amount) / 1000000);
+                if (!mostLosses || playerWallets[g.value.player].losses > mostLosses) {
+                    mostLosses = playerWallets[g.value.player].losses;
+                    mostLossesUser = g.value.player;
+                }
+                if (!mostLost || playerWallets[g.value.player].balance < mostLost) {
+                    mostLost = playerWallets[g.value.player].balance;
+                    mostLostUser = g.value.player;
+                }
             }
         }
+        // console.log(Object.keys(playerWallets));
+        for (let player of Object.keys(playerWallets)) {
+            if (playerWallets[player].wins > 5 && playerWallets[player].losses > 0) {
+                playerWallets[player].ratio = playerWallets[player].wins / playerWallets[player].losses;
+            } else if (playerWallets[player].wins > 5) {
+                playerWallets[player].ratio = 100;
+            }
+
+            if (!bestRatio || playerWallets[player].ratio > bestRatio) {
+                bestRatio = playerWallets[player].ratio;
+                bestRatioUser = player;
+            }
+        }
+        // console.log(playerWallets);
         flipWinPerc = parseFloat((flipWins / flipCount) * 100).toFixed(2) + "%";
         flipLosePerc = parseFloat((flipLosses / flipCount) * 100).toFixed(2) + "%";
-        uniqueWalletCount = playerWallets.length;
+        uniqueWalletCount = Object.keys(playerWallets).length;
+
+        // mostWinsUser = mostWinsUser.substring(0, 3) + "..." + mostWinsUser.substring(mostWinsUser.length - 3, mostWinsUser.length);
     }
     // let SingleStats = getSingleStats();
 
     import SingleStat from "./_singleStat.svelte";
 </script>
 
-<section class="text-gray-400 body-font">
+<section class="text-gray-400 body-font pb-4">
     <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <span
-            class="flex order-first lg:order-none title-font font-medium text-2xl underline items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0"
+            class="flex order-first lg:order-none title-font font-medium text-2xl items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0"
             >Coin Flip Stats</span
         >
         <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center" />
@@ -143,23 +211,39 @@
         <div class="flex flex-wrap -m-4 text-center stats">
             <SingleStat value={flipCount} title="Games Played" isTez="false" />
             <SingleStat value={flipTez} title="Wagered" isTez="true" />
-            <SingleStat value={flipWins} title="Doubles ({flipWinPerc})" isTez="false" />
-            <SingleStat value={flipLosses} title="Rugs ({flipLosePerc})" isTez="false" />
             <SingleStat value={flipToPool} title="Sent to Pool" isTez="true" />
             <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
-        </div>
-    </div>
-    {#if flipGames}
-        <div class="container px-5 pb-24 pt-0 mx-auto mt-0 rounded-lg">
-            <div tabindex="0" class="collapse collapse-arrow">
+            <SingleStat value={flipWins} title="Doubles ({flipWinPerc})" isTez="false" />
+            <SingleStat value={flipLosses} title="Rugs ({flipLosePerc})" isTez="false" />
+            <div tabindex="0" class="collapse collapse-arrow w-full border-transparent">
                 <input type="checkbox" />
-                <div class="collapse-title text-xl font-medium text-center bg-zinc-900 rounded-lg mx-0 px-0 underline">
-                    VIEW FLIP GAMES
-                </div>
-                <div class="collapse-content h-[40rem] ">
-                    <CoinTable {flipGames} />
+                <div class="collapse-title text-xl font-medium text-center mx-auto px-0">Player Stats</div>
+                <div class="collapse-content flex flex-wrap w-full text-center stats">
+                    <SingleStat value={formatAddress(mostWinsUser)} title="Most Wins ({mostWins})" isTez="false" />
+                    <SingleStat value={formatAddress(mostWonUser)} title="Most Won ({mostWon}xtz)" isTez="false" />
+                    <SingleStat
+                        value={formatAddress(mostLossesUser)}
+                        title="Most Losses ({mostLosses})"
+                        isTez="false"
+                    />
+                    <SingleStat value={formatAddress(mostLostUser)} title="Most Lost ({mostLost}xtz)" isTez="false" />
+                    <SingleStat value={formatAddress(mostPlaysUser)} title="Most Flips ({mostPlays})" isTez="false" />
+                    <SingleStat
+                        value={formatAddress(bestRatioUser)}
+                        title="Luckiest ({formatWL(bestRatioUser)})"
+                        isTez="false"
+                    />
                 </div>
             </div>
+            {#if flipGames}
+                <div tabindex="0" class="collapse collapse-arrow w-full border-zinc-900">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium text-center bg-zinc-900 px-0">Flip Log</div>
+                    <div class="collapse-content h-[40rem] text-left">
+                        <CoinTable {flipGames} />
+                    </div>
+                </div>
+            {/if}
         </div>
-    {/if}
+    </div>
 </section>

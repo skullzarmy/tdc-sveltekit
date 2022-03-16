@@ -17,11 +17,14 @@
         css: true,
     };
     if (dataRefreshCoin) {
+        console.log("refresh coin flip games");
         data = Array();
         for (let game of flipGames) {
             data.push(game.value);
             data[data.length - 1].amount = data[data.length - 1].amount / 1000000;
         }
+    } else {
+        console.log(dataRefreshCoin);
     }
 </script>
 
