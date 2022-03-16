@@ -17,7 +17,8 @@
     var uniqueWalletCount = null;
     var playerWallets = Array();
     export var battleGames;
-    let dataRefreshBattle;
+    let refreshingBattles = false;
+    let dataRefreshBattle = true;
     const settings = {
         blocks: {
             searchInput: true,
@@ -33,6 +34,7 @@
     let rows;
     var data;
     const battleWallet = "KT1J8uugdkykcDx46ycEBxv3shNioDMvv1ad";
+    const allWallets = ["KT1Sv23ZC6xDC4FtdRv2qwqcYSt2m4rsNG83", "KT1J8uugdkykcDx46ycEBxv3shNioDMvv1ad"];
     const poolWallet = "KT1K6TyRSsAxukmjDWik1EoExSKsTg9wGEEX";
 
     onMount(async () => {
@@ -46,72 +48,86 @@
 
     async function getTxnsToPool() {
         battlePoolTxnCount = 0;
-        let txns = await fetch(
-            "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" +
-                battleWallet +
-                "&target=" +
-                poolWallet,
-            {
-                headers: { Accept: "application/json" },
+        for (let wallet of allWallets) {
+            let txns = await fetch(
+                "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" + wallet + "&target=" + poolWallet,
+                {
+                    headers: { Accept: "application/json" },
+                }
+            ).catch((e) => console.log(e));
+            let txnData = await txns.json();
+            for (let txn of txnData) {
+                battlePoolTxnCount += txn.amount / 1000000;
             }
-        ).catch((e) => console.log(e));
-        let txnData = await txns.json();
-        for (let txn of txnData) {
-            battlePoolTxnCount += txn.amount / 1000000;
         }
         battleToPool = parseFloat(battlePoolTxnCount).toFixed(2);
     }
 
     async function updateBattleStats() {
         // console.log('updating');
-        let contractData = await fetch("https://api.tzkt.io/v1/contracts/" + battleWallet, {
-            headers: { Accept: "application/json" },
-        }).catch((e) => console.log(e));
-        let contract = await contractData.json();
-        // console.log(contract);
-        battleBalance = contract.balance / 1000000;
-        let battleStore = await fetch("https://api.tzkt.io/v1/contracts/" + battleWallet + "/storage", {
-            headers: { Accept: "application/json" },
-        }).catch((e) => console.log(e));
-        let battleData = await battleStore.json();
-        battleCount = battleData.gamesTotal;
-        battleTez = JSON.stringify(battleData.flipped / 1000000);
-        let battleGameStore = await fetch(
-            "https://api.tzkt.io/v1/bigmaps/" + battleData.games + "/keys?limit=10000&sort=id",
-            {
-                headers: { Accept: "application/json" },
-            }
-        ).catch((e) => console.log(e));
-        battleGames = await battleGameStore.json();
+        // clear out counters
         battlePlayed = null;
         battleCancelled = null;
         wagers = Array();
         wagerLargest = null;
-        for (let g of battleGames) {
-            let status = g.value.status;
-            if (status == "1" || status == "2") {
-                battlePlayed++;
-            } else if (status == "3") {
-                battleCancelled++;
-            }
-            wagers.push(parseInt(g.value.amount));
-            if (!wagerLargest || g.value.amount > wagerLargest) {
-                wagerLargest = parseInt(g.value.amount);
-            }
-            if (!playerWallets.includes(g.value.p1)) {
-                playerWallets.push(g.value.p1);
-            }
-            if (!playerWallets.includes(g.value.p2)) {
-                playerWallets.push(g.value.p2);
-            }
-            // let playerWallet = g.value.player;
-            // let gameInfo = [];
-            battlePlayedPerc = parseFloat((battlePlayed / battleCount) * 100).toFixed(2) + "%";
-            battleCancelPerc = parseFloat((battleCancelled / battleCount) * 100).toFixed(2) + "%";
+        battleBalance = null;
+        battleCount = null;
+        battleTez = null;
+        battleGames = [];
+        if (dataRefreshBattle) {
+            refreshingBattles = true;
         }
+
+        // loop for all contracts
+        for (let wallet of allWallets) {
+            let contractData = await fetch("https://api.tzkt.io/v1/contracts/" + wallet, {
+                headers: { Accept: "application/json" },
+            }).catch((e) => console.log(e));
+            let contract = await contractData.json();
+            // console.log(contract);
+            battleBalance = battleBalance + parseInt(contract.balance / 1000000);
+            let battleStore = await fetch("https://api.tzkt.io/v1/contracts/" + wallet + "/storage", {
+                headers: { Accept: "application/json" },
+            }).catch((e) => console.log(e));
+            let battleData = await battleStore.json();
+            battleCount = battleCount + parseInt(battleData.gamesTotal);
+            battleTez = battleTez + parseInt(battleData.flipped / 1000000);
+            let battleGameStore = await fetch(
+                "https://api.tzkt.io/v1/bigmaps/" + battleData.games + "/keys?limit=10000&sort=id",
+                {
+                    headers: { Accept: "application/json" },
+                }
+            ).catch((e) => console.log(e));
+            let thisBattleGames = await battleGameStore.json();
+            Array.prototype.push.apply(battleGames, thisBattleGames);
+            // console.table(battleGames);
+
+            for (let g of thisBattleGames) {
+                let status = g.value.status;
+                if (status == "1" || status == "2") {
+                    battlePlayed++;
+                } else if (status == "3") {
+                    battleCancelled++;
+                }
+                wagers.push(parseInt(g.value.amount));
+                if (!wagerLargest || parseInt(g.value.amount / 1000000) > wagerLargest) {
+                    wagerLargest = parseInt(g.value.amount / 1000000);
+                }
+                if (!playerWallets.includes(g.value.p1)) {
+                    playerWallets.push(g.value.p1);
+                }
+                if (!playerWallets.includes(g.value.p2)) {
+                    playerWallets.push(g.value.p2);
+                }
+            }
+        }
+        // sums and extrapolation from counters
+        battlePlayedPerc = parseFloat((battlePlayed / battleCount) * 100).toFixed(2) + "%";
+        battleCancelPerc = parseFloat((battleCancelled / battleCount) * 100).toFixed(2) + "%";
         wagersAvg = parseFloat(wagers.reduce((a, b) => a + b, 0) / wagers.length / 1000000).toFixed(2);
-        wagerLargest = wagerLargest / 1000000;
+        // wagerLargest = wagerLargest / 1000000;
         uniqueWalletCount = playerWallets.length;
+        refreshingBattles = false;
     }
 
     import SingleStat from "./_singleStat.svelte";
@@ -149,7 +165,7 @@
             <SingleStat value={wagerLargest} title="Largest Bet" isTez="true" />
             <SingleStat value={battleToPool} title="Sent to Pool" isTez="true" />
             <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
-            {#if battleGames}
+            {#if battleGames && !refreshingBattles}
                 <div tabindex="0" class="collapse collapse-arrow w-full border-zinc-900">
                     <input type="checkbox" />
                     <div class="collapse-title text-xl font-medium text-center bg-zinc-900 mx-0 px-0">Battle Log</div>

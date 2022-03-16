@@ -1,7 +1,7 @@
 <script>
     import { Datatable, SearchInput, PaginationButtons, PaginationRowCount } from "svelte-simple-datatables";
     export let battleGames;
-    export let dataRefreshBattle = true;
+    export var dataRefreshBattle = true;
     let data;
     let rows;
     const settings = {
@@ -31,8 +31,8 @@
 {#if data}
     <Datatable {settings} bind:data bind:dataRows={rows} id={"battleTable"}>
         <table class="w-full bg-zinc-900">
-            <input type="checkbox" name="dataRefreshBattle" id="dataRefreshBattle" bind:checked={dataRefreshBattle} />
-            <label for="dataRefreshBattle">&nbsp;&mdash; Data Refresh (resets sort)</label>
+            <!-- <input type="checkbox" name="dataRefreshBattle" id="dataRefreshBattle" bind:checked={dataRefreshBattle} />
+            <label for="dataRefreshBattle">&nbsp;&mdash; Data Refresh (resets sort)</label> -->
             <thead>
                 <th data-key="player">Player 1</th>
                 <th data-key="heads">Player 2</th>
