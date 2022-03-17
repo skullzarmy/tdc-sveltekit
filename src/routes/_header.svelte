@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     const poolWallet = "KT1K6TyRSsAxukmjDWik1EoExSKsTg9wGEEX";
     var poolBalance = null;
     updatePoolBalance();

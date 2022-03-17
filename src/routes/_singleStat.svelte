@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     export let value;
     export let title;
     export let isTez;

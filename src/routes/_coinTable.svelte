@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     import { Datatable, SearchInput, PaginationButtons, PaginationRowCount } from "svelte-simple-datatables";
     export let flipGames;
     export let dataRefreshCoin = true;

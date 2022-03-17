@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     import { Datatable, SearchInput, PaginationButtons, PaginationRowCount } from "svelte-simple-datatables";
     export let battleGames;
     export var dataRefreshBattle = true;

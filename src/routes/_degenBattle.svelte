@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     import { onMount } from "svelte";
     import BattleTable from "./_battleTable.svelte";
     var battleCount = null;
@@ -47,7 +47,7 @@
         setInterval(() => {
             updateBattleStats();
             getTxnsToPool();
-        }, 150000);
+        }, 60000);
     });
 
     async function getTxnsToPool() {
@@ -81,6 +81,13 @@
         if (dataRefreshBattle) {
             refreshingBattles = true;
         }
+        let tempBal = null;
+        let tempCount = null;
+        let tempTez = null;
+        let tempWagerLargest = null;
+        let tempPlayed = null;
+        let tempCancelled = null;
+        let tempbattleGames = [];
 
         // loop for all contracts
         for (let wallet of allWallets) {
@@ -89,13 +96,13 @@
             }).catch((e) => console.log(e));
             let contract = await contractData.json();
             // console.log(contract);
-            battleBalance = battleBalance + parseInt(contract.balance / 1000000);
+            tempBal = parseInt(contract.balance / 1000000);
             let battleStore = await fetch("https://api.tzkt.io/v1/contracts/" + wallet + "/storage", {
                 headers: { Accept: "application/json" },
             }).catch((e) => console.log(e));
             let battleData = await battleStore.json();
-            battleCount = battleCount + parseInt(battleData.gamesTotal);
-            battleTez = battleTez + parseInt(battleData.flipped / 1000000);
+            tempCount = tempCount + parseInt(battleData.gamesTotal);
+            tempTez = tempTez + parseInt(battleData.flipped / 1000000);
             let battleGameStore = await fetch(
                 "https://api.tzkt.io/v1/bigmaps/" + battleData.games + "/keys?limit=10000&sort=id",
                 {
@@ -103,19 +110,19 @@
                 }
             ).catch((e) => console.log(e));
             let thisBattleGames = await battleGameStore.json();
-            Array.prototype.push.apply(battleGames, thisBattleGames);
+            Array.prototype.push.apply(tempbattleGames, thisBattleGames);
             // console.table(battleGames);
 
             for (let g of thisBattleGames) {
                 let status = g.value.status;
                 if (status == "1" || status == "2") {
-                    battlePlayed++;
+                    tempPlayed++;
                 } else if (status == "3") {
-                    battleCancelled++;
+                    tempCancelled++;
                 }
                 wagers.push(parseInt(g.value.amount));
-                if (!wagerLargest || parseInt(g.value.amount / 1000000) > wagerLargest) {
-                    wagerLargest = parseInt(g.value.amount / 1000000);
+                if (!tempWagerLargest || parseInt(g.value.amount / 1000000) > tempWagerLargest) {
+                    tempWagerLargest = parseInt(g.value.amount / 1000000);
                 }
                 if (!playerWallets.includes(g.value.p1)) {
                     playerWallets.push(g.value.p1);
@@ -126,6 +133,13 @@
             }
         }
         // sums and extrapolation from counters
+        battleBalance = tempBal;
+        battleCount = tempCount;
+        battleTez = tempTez;
+        battlePlayed = tempPlayed;
+        battleCancelled = tempCancelled;
+        wagerLargest = tempWagerLargest;
+        battleGames = tempbattleGames;
         battlePlayedPerc = parseFloat((battlePlayed / battleCount) * 100).toFixed(2) + "%";
         battleCancelPerc = parseFloat((battleCancelled / battleCount) * 100).toFixed(2) + "%";
         wagersAvg = parseFloat(wagers.reduce((a, b) => a + b, 0) / wagers.length / 1000000).toFixed(2);

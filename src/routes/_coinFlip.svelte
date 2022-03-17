@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     import { onMount } from "svelte";
     import CoinTable from "./_coinTable.svelte";
     var flipCount = null;
