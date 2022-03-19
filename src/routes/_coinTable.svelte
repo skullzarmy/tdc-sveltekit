@@ -31,8 +31,14 @@
 {#if data}
     <Datatable {settings} bind:data bind:dataRows={rows} id={"flipTable"}>
         <table class="w-full bg-zinc-900">
-            <input type="checkbox" name="dataRefreshCoin" id="dataRefreshCoin" bind:checked={dataRefreshCoin} />
-            <label for="dataRefreshCoin">&nbsp;&mdash; Data Refresh (resets sort)</label>
+            <input
+                type="checkbox"
+                class="toggle mt-1"
+                name="dataRefreshCoin"
+                id="dataRefreshCoin"
+                bind:checked={dataRefreshCoin}
+            />
+            <label for="dataRefreshCoin" class="align-super">&nbsp;&mdash; Data Refresh (resets sort)</label>
             <thead>
                 <th data-key="player">Player</th>
                 <th data-key="heads">Heads / Tails</th>

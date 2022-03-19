@@ -1,10 +1,15 @@
-<script type="module">
+<!-- <script type="module"> -->
+<script>
     import { onMount } from "svelte";
     import BattleTable from "./_battleTable.svelte";
     var battleCount = null;
     var battleTez = null;
     var battlePlayed = null;
     var battleCancelled = null;
+    var p1Wins = null;
+    var p1WinPerc = null;
+    var p2Wins = null;
+    var p2WinPerc = null;
     var walletData = Array();
     var battleBalance = null;
     var battlePlayedPerc;
@@ -77,6 +82,8 @@
         battleBalance = null;
         battleCount = null;
         battleTez = null;
+        p1Wins = null;
+        p2Wins = null;
         battleGames = [];
         if (dataRefreshBattle) {
             refreshingBattles = true;
@@ -87,6 +94,8 @@
         let tempWagerLargest = null;
         let tempPlayed = null;
         let tempCancelled = null;
+        let tempP1Wins = 0;
+        let tempP2Wins = 0;
         let tempbattleGames = [];
 
         // loop for all contracts
@@ -115,8 +124,12 @@
 
             for (let g of thisBattleGames) {
                 let status = g.value.status;
-                if (status == "1" || status == "2") {
+                if (status == "1") {
                     tempPlayed++;
+                    tempP1Wins++;
+                } else if (status == "2") {
+                    tempPlayed++;
+                    tempP2Wins++;
                 } else if (status == "3") {
                     tempCancelled++;
                 }
@@ -140,8 +153,12 @@
         battleCancelled = tempCancelled;
         wagerLargest = tempWagerLargest;
         battleGames = tempbattleGames;
+        p1Wins = tempP1Wins;
+        p2Wins = tempP2Wins;
         battlePlayedPerc = parseFloat((battlePlayed / battleCount) * 100).toFixed(2) + "%";
         battleCancelPerc = parseFloat((battleCancelled / battleCount) * 100).toFixed(2) + "%";
+        p1WinPerc = parseFloat((p1Wins / battlePlayed) * 100).toFixed(2) + "%";
+        p2WinPerc = parseFloat((p2Wins / battlePlayed) * 100).toFixed(2) + "%";
         wagersAvg = parseFloat(wagers.reduce((a, b) => a + b, 0) / wagers.length / 1000000).toFixed(2);
         // wagerLargest = wagerLargest / 1000000;
         uniqueWalletCount = playerWallets.length;
@@ -179,6 +196,8 @@
             <SingleStat value={battleTez} title="Wagered" isTez="true" />
             <SingleStat value={battleCount} title="Started" isTez="false" />
             <SingleStat value={battleCancelled} title="Cancelled ({battleCancelPerc})" isTez="false" />
+            <SingleStat value={p1Wins} title="Player 1 Wins ({p1WinPerc})" isTez="false" />
+            <SingleStat value={p2Wins} title="Player 2 Wins ({p2WinPerc})" isTez="false" />
             <SingleStat value={wagersAvg} title="Average Bet" isTez="true" />
             <SingleStat value={wagerLargest} title="Largest Bet" isTez="true" />
             <SingleStat value={battleToPool} title="Sent to Pool" isTez="true" />
