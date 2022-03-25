@@ -27,11 +27,16 @@
         <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center" />
         <a
             href="https://twitter.com/TDC_Notifier"
-            class="btn btn-outline mx-4 text-white hover:bg-zinc-300 hover:text-zinc-900 flex"
+            class="btn btn-outline md:mr-4 text-white hover:bg-zinc-300 hover:text-zinc-900 flex"
             ><img src="/twitter.png" alt="Twitter logo" /> Follow TDC Twitter Bot</a
         >
+        <a
+            href="https://degenstats.com/"
+            target="_blank"
+            class="btn btn-outline md:mr-4 text-white hover:bg-zinc-300 hover:text-zinc-900 flex">Depth Stats</a
+        >
         {#if !poolBalance}
-            <button href="/" class="btn btn-outline loading">
+            <button href="/" class="btn btn-outline loading text-white hover:bg-zinc-300 hover:text-zinc-900 ">
                 Pool Wallet<span class="pl-1">loading</span>
             </button>
         {:else}

@@ -1,5 +1,5 @@
-<!-- <script type="module"> -->
-<script>
+<script type="module">
+    // <script>
     import { onMount } from "svelte";
     import BattleTable from "./_battleTable.svelte";
     var battleCount = null;
@@ -55,6 +55,13 @@
         }, 60000);
     });
 
+    function formatNum(num) {
+        if (!num) {
+            return;
+        }
+        return parseFloat(num).toLocaleString("en-US");
+    }
+
     async function getTxnsToPool() {
         battlePoolTxnCount = 0;
         for (let wallet of allWallets) {
@@ -69,7 +76,7 @@
                 battlePoolTxnCount += txn.amount / 1000000;
             }
         }
-        battleToPool = parseFloat(battlePoolTxnCount).toFixed(2);
+        battleToPool = parseFloat(battlePoolTxnCount.toFixed(2));
     }
 
     async function updateBattleStats() {
@@ -111,7 +118,7 @@
             }).catch((e) => console.log(e));
             let battleData = await battleStore.json();
             tempCount = tempCount + parseInt(battleData.gamesTotal);
-            tempTez = tempTez + parseInt(battleData.flipped / 1000000);
+            tempTez = tempTez + parseInt((battleData.flipped * 2) / 1000000);
             let battleGameStore = await fetch(
                 "https://api.tzkt.io/v1/bigmaps/" + battleData.games + "/keys?limit=10000&sort=id",
                 {
@@ -152,7 +159,9 @@
         battlePlayed = tempPlayed;
         battleCancelled = tempCancelled;
         wagerLargest = tempWagerLargest;
-        battleGames = tempbattleGames;
+        if (!battleGames || tempbattleGames.length > battleGames.length) {
+            battleGames = tempbattleGames;
+        }
         p1Wins = tempP1Wins;
         p2Wins = tempP2Wins;
         battlePlayedPerc = parseFloat((battlePlayed / battleCount) * 100).toFixed(2) + "%";
@@ -192,16 +201,16 @@
 
     <div class="container px-5 pb-24 pt-0 mx-auto">
         <div class="flex flex-wrap -m-4 text-center stats">
-            <SingleStat value={battlePlayed} title="Played ({battlePlayedPerc})" isTez="false" />
-            <SingleStat value={battleTez} title="Wagered" isTez="true" />
-            <SingleStat value={battleCount} title="Started" isTez="false" />
-            <SingleStat value={battleCancelled} title="Cancelled ({battleCancelPerc})" isTez="false" />
-            <SingleStat value={p1Wins} title="Player 1 Wins ({p1WinPerc})" isTez="false" />
-            <SingleStat value={p2Wins} title="Player 2 Wins ({p2WinPerc})" isTez="false" />
-            <SingleStat value={wagersAvg} title="Average Bet" isTez="true" />
-            <SingleStat value={wagerLargest} title="Largest Bet" isTez="true" />
-            <SingleStat value={battleToPool} title="Sent to Pool" isTez="true" />
-            <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
+            <SingleStat value={formatNum(battlePlayed)} title="Played ({battlePlayedPerc})" isTez="false" />
+            <SingleStat value={formatNum(battleTez)} title="Wagered" isTez="true" />
+            <SingleStat value={formatNum(battleCount)} title="Started" isTez="false" />
+            <SingleStat value={formatNum(battleCancelled)} title="Cancelled ({battleCancelPerc})" isTez="false" />
+            <SingleStat value={formatNum(p1Wins)} title="Player 1 Wins ({p1WinPerc})" isTez="false" />
+            <SingleStat value={formatNum(p2Wins)} title="Player 2 Wins ({p2WinPerc})" isTez="false" />
+            <SingleStat value={formatNum(wagersAvg)} title="Average Bet" isTez="true" />
+            <SingleStat value={formatNum(wagerLargest)} title="Largest Bet" isTez="true" />
+            <SingleStat value={formatNum(battleToPool)} title="Sent to Pool" isTez="true" />
+            <SingleStat value={formatNum(uniqueWalletCount)} title="Unique Players" isTez="false" />
             {#if battleGames && !refreshingBattles}
                 <div tabindex="0" class="collapse collapse-arrow w-full border-zinc-900">
                     <input type="checkbox" />

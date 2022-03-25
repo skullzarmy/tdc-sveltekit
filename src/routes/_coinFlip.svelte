@@ -1,4 +1,5 @@
 <script type="module">
+    // <script>
     import { onMount } from "svelte";
     import CoinTable from "./_coinTable.svelte";
     var flipCount = null;
@@ -64,6 +65,12 @@
         }
         return playerWallets[address].wins + "W / " + playerWallets[address].losses + "L";
     }
+    function formatNum(num) {
+        if (!num) {
+            return;
+        }
+        return parseFloat(num).toLocaleString("en-US");
+    }
     async function getTxnsToPool() {
         let txns = await fetch(
             "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" + flipWallet + "&target=" + poolWallet,
@@ -90,7 +97,7 @@
         }).catch((e) => console.log(e));
         let flipData = await flipStore.json();
         flipCount = flipData.gamesPlayed;
-        flipTez = JSON.stringify(flipData.flipped / 1000000);
+        flipTez = parseFloat(flipData.flipped / 1000000);
         let limit;
         var pages = 1;
         if (flipCount / 10000 > 1) {
@@ -134,11 +141,11 @@
                 playerWallets[g.value.player].balance =
                     playerWallets[g.value.player].balance + Math.floor(parseInt(g.value.amount) / 1000000);
                 if (!mostWins || playerWallets[g.value.player].wins > mostWins) {
-                    mostWins = playerWallets[g.value.player].wins;
+                    mostWins = playerWallets[g.value.player].wins.toLocaleString("en-US");
                     mostWinsUser = g.value.player;
                 }
                 if (!mostWon || playerWallets[g.value.player].balance > mostWon) {
-                    mostWon = playerWallets[g.value.player].balance;
+                    mostWon = playerWallets[g.value.player].balance.toLocaleString("en-US");
                     mostWonUser = g.value.player;
                 }
             } else {
@@ -147,11 +154,11 @@
                 playerWallets[g.value.player].balance =
                     playerWallets[g.value.player].balance - Math.floor(parseInt(g.value.amount) / 1000000);
                 if (!mostLosses || playerWallets[g.value.player].losses > mostLosses) {
-                    mostLosses = playerWallets[g.value.player].losses;
+                    mostLosses = playerWallets[g.value.player].losses.toLocaleString("en-US");
                     mostLossesUser = g.value.player;
                 }
                 if (!mostLost || playerWallets[g.value.player].balance < mostLost) {
-                    mostLost = playerWallets[g.value.player].balance;
+                    mostLost = playerWallets[g.value.player].balance.toLocaleString("en-US");
                     mostLostUser = g.value.player;
                 }
             }
@@ -172,7 +179,7 @@
         // console.log(playerWallets);
         flipWinPerc = parseFloat((flipWins / flipCount) * 100).toFixed(2) + "%";
         flipLosePerc = parseFloat((flipLosses / flipCount) * 100).toFixed(2) + "%";
-        uniqueWalletCount = Object.keys(playerWallets).length;
+        uniqueWalletCount = Object.keys(playerWallets).length.toLocaleString("en-US");
 
         // mostWinsUser = mostWinsUser.substring(0, 3) + "..." + mostWinsUser.substring(mostWinsUser.length - 3, mostWinsUser.length);
     }
@@ -209,12 +216,12 @@
 
     <div class="container px-5 pb-4 pt-0 mx-auto">
         <div class="flex flex-wrap -m-4 text-center stats">
-            <SingleStat value={flipCount} title="Games Played" isTez="false" />
-            <SingleStat value={flipTez} title="Wagered" isTez="true" />
-            <SingleStat value={flipWins} title="Doubles ({flipWinPerc})" isTez="false" />
-            <SingleStat value={flipLosses} title="Rugs ({flipLosePerc})" isTez="false" />
-            <SingleStat value={flipToPool} title="Sent to Pool" isTez="true" />
-            <SingleStat value={uniqueWalletCount} title="Unique Players" isTez="false" />
+            <SingleStat value={formatNum(flipCount)} title="Games Played" isTez="false" />
+            <SingleStat value={formatNum(flipTez)} title="Wagered" isTez="true" />
+            <SingleStat value={formatNum(flipWins)} title="Doubles ({flipWinPerc})" isTez="false" />
+            <SingleStat value={formatNum(flipLosses)} title="Rugs ({flipLosePerc})" isTez="false" />
+            <SingleStat value={formatNum(flipToPool)} title="Sent to Pool" isTez="true" />
+            <SingleStat value={formatNum(uniqueWalletCount)} title="Unique Players" isTez="false" />
             <div tabindex="0" class="collapse collapse-arrow w-full border-transparent">
                 <input type="checkbox" />
                 <div class="collapse-title text-xl font-medium text-center mx-auto px-0">Player Stats</div>
