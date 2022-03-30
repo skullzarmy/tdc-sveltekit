@@ -1,5 +1,5 @@
-<script type="module">
-    // <script>
+<!-- <script type="module"> -->
+<script>
     import { onMount } from "svelte";
     import CoinTable from "./_coinTable.svelte";
     var flipCount = null;
@@ -72,6 +72,9 @@
         return parseFloat(num).toLocaleString("en-US");
     }
     async function getTxnsToPool() {
+        console.log(
+            "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" + flipWallet + "&target=" + poolWallet
+        );
         let txns = await fetch(
             "https://api.tzkt.io/v1/operations/transactions?limit=10000&sender=" + flipWallet + "&target=" + poolWallet,
             {
@@ -80,10 +83,12 @@
         ).catch((e) => console.log(e));
         let txnData = await txns.json();
         flipPoolTxnCount = 0;
+        console.log(flipPoolTxnCount);
         for (let txn of txnData) {
-            flipPoolTxnCount += txn.amount / 1000000;
+            flipPoolTxnCount += txn.amount;
+            console.log(flipPoolTxnCount);
         }
-        flipToPool = parseFloat(flipPoolTxnCount).toFixed(2);
+        flipToPool = parseFloat(flipPoolTxnCount / 100000).toFixed(2);
     }
 
     async function updateCoinFlip() {

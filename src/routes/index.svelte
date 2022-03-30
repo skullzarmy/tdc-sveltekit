@@ -22,10 +22,17 @@
     <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Smooch+Sans:wght@100;400;800&display=swap" rel="stylesheet"> -->
 </svelte:head>
-<section class="text-gray-400 body-font">
-    <CoinFlip />
+<section class="text-gray-400 body-font text-center bg-base-100 py-32">
+    <p class="text-3xl">
+        Please visit <a
+            class="text-primary hover:text-secondary transition-colors underline"
+            href="https://degenstats.com/">https://degenstats.com/</a
+        > to view TDC stats.
+    </p>
+    <p>This dashboard has been retired.</p>
+    <!-- <CoinFlip /> -->
 </section>
-<section class="text-gray-400 body-font">
-    <DegenBattle />
-</section>
+<!-- <section class="text-gray-400 body-font"> -->
+<!-- <DegenBattle /> -->
+<!-- </section> -->
 <FooterSection />

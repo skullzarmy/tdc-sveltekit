@@ -1,18 +1,4 @@
 <script type="module">
-    const poolWallet = "KT1K6TyRSsAxukmjDWik1EoExSKsTg9wGEEX";
-    var poolBalance = null;
-    updatePoolBalance();
-    setInterval(() => {
-        updatePoolBalance();
-    }, 30000);
-    async function updatePoolBalance() {
-        console.log("updating balance");
-        let poolInstance = await fetch("https://api.tzkt.io/v1/contracts/" + poolWallet, {
-            headers: { Accept: "application/json" },
-        }).catch((e) => console.log(e));
-        let poolData = await poolInstance.json();
-        poolBalance = poolData.balance / 1000000;
-    }
 </script>
 
 <header class="text-gray-400 bg-transparent body-font shadow w-full">
@@ -30,23 +16,5 @@
             class="btn btn-outline md:mr-4 text-white hover:bg-zinc-300 hover:text-zinc-900 flex"
             ><img src="/twitter.png" alt="Twitter logo" /> Follow TDC Twitter Bot</a
         >
-        <a
-            href="https://degenstats.com/"
-            target="_blank"
-            class="btn btn-outline md:mr-4 text-white hover:bg-zinc-300 hover:text-zinc-900 flex">Depth Stats</a
-        >
-        {#if !poolBalance}
-            <button href="/" class="btn btn-outline loading text-white hover:bg-zinc-300 hover:text-zinc-900 ">
-                Pool Wallet<span class="pl-1">loading</span>
-            </button>
-        {:else}
-            <a
-                href="https://better-call.dev/mainnet/{poolWallet}/interact?entrypoint=withdraw"
-                target="_blank"
-                class="btn btn-secondary"
-            >
-                Pool Wallet<span class="pl-1">{poolBalance}</span>xtz
-            </a>
-        {/if}
     </div>
 </header>

@@ -1,4 +1,6 @@
-<footer class="flex flex-col items-center justify-between px-6 py-4 bg-zinc-800 sm:flex-row">
+<footer
+    class="fixed bottom-0 left-0 right-0 flex flex-col items-center justify-between px-6 py-4 bg-zinc-800 sm:flex-row"
+>
     <a href="https://skllzrmy.com/"
         ><img src="/shockedskull-sm.gif" class="w-1/2 mx-auto rounded-full mt-25" alt="skllzrmy.tez logo" /></a
     >
